@@ -1,22 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Oldbury Load Plan</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial;
 background:#f4f6f8;
 display:flex;
 flex-direction:column;
 height:100vh;
 }
-
-/* HEADER */
 
 .header{
 background:white;
@@ -30,7 +27,7 @@ padding:12px 20px;
 .brand{
 display:flex;
 align-items:center;
-gap:12px;
+gap:10px;
 }
 
 .brand img{
@@ -47,12 +44,9 @@ background:#d71920;
 color:white;
 border:none;
 padding:10px 14px;
-margin-left:8px;
 border-radius:6px;
 cursor:pointer;
 }
-
-/* TABS */
 
 .tabs{
 background:white;
@@ -75,8 +69,6 @@ background:#ffecec;
 border-color:#d71920;
 }
 
-/* VIEWER */
-
 .viewer{
 flex:1;
 position:relative;
@@ -96,6 +88,7 @@ display:none;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -104,34 +97,30 @@ display:none;
 
 <div class="brand">
 <img src="amco-logo.png">
-<div class="title" id="pageTitle">Oldbury Load Plan</div>
+<div class="title" id="title">Oldbury Load Plan</div>
 </div>
 
 <div class="controls">
-<button onclick="printCurrent()">Print</button>
+<button onclick="printSheet()">Print</button>
 </div>
 
 </div>
 
 <div class="tabs">
 
-<button class="tab active" id="tabLoad" onclick="showLoad()">LOAD PLAN</button>
-<button class="tab" id="tabCheck" onclick="showCheck()">CHECK SHEET</button>
+<button class="tab active" id="loadTab" onclick="showLoad()">LOAD PLAN</button>
+<button class="tab" id="checkTab" onclick="showCheck()">CHECK SHEET</button>
 
 </div>
 
 <div class="viewer">
 
-<!-- LOAD PLAN -->
-
 <iframe id="loadFrame"
-src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&Item=LOAD%20SHEETS">
+src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True">
 </iframe>
 
-<!-- CHECK SHEET -->
-
 <iframe id="checkFrame" class="hidden"
-src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&Item=CHECK%20SHEET">
+src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True">
 </iframe>
 
 </div>
@@ -145,10 +134,10 @@ function showLoad(){
 document.getElementById("loadFrame").classList.remove("hidden");
 document.getElementById("checkFrame").classList.add("hidden");
 
-document.getElementById("tabLoad").classList.add("active");
-document.getElementById("tabCheck").classList.remove("active");
+document.getElementById("loadTab").classList.add("active");
+document.getElementById("checkTab").classList.remove("active");
 
-document.getElementById("pageTitle").innerText="Oldbury Load Plan";
+document.getElementById("title").innerText="Oldbury Load Plan";
 
 current="load";
 
@@ -159,16 +148,16 @@ function showCheck(){
 document.getElementById("checkFrame").classList.remove("hidden");
 document.getElementById("loadFrame").classList.add("hidden");
 
-document.getElementById("tabCheck").classList.add("active");
-document.getElementById("tabLoad").classList.remove("active");
+document.getElementById("checkTab").classList.add("active");
+document.getElementById("loadTab").classList.remove("active");
 
-document.getElementById("pageTitle").innerText="Oldbury Check Sheet";
+document.getElementById("title").innerText="Oldbury Check Sheet";
 
 current="check";
 
 }
 
-function printCurrent(){
+function printSheet(){
 
 if(current==="load"){
 window.open(document.getElementById("loadFrame").src,"_blank");
