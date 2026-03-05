@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oldbury Load Plan</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#f4f6f8;
+display:flex;
+flex-direction:column;
+height:100vh;
+}
+
+/* HEADER */
+
+.header{
+background:white;
+border-bottom:4px solid #d71920;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 20px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+height:36px;
+}
+
+.title{
+font-size:18px;
+font-weight:bold;
+}
+
+.controls button{
+background:#d71920;
+color:white;
+border:none;
+padding:10px 14px;
+margin-left:8px;
+border-radius:6px;
+cursor:pointer;
+}
+
+/* TABS */
+
+.tabs{
+background:white;
+padding:10px 20px;
+border-bottom:1px solid #ddd;
+}
+
+.tab{
+padding:8px 14px;
+border-radius:20px;
+border:1px solid #ccc;
+margin-right:10px;
+cursor:pointer;
+font-weight:600;
+background:white;
+}
+
+.active{
+background:#ffecec;
+border-color:#d71920;
+}
+
+/* VIEWER */
+
+.viewer{
+flex:1;
+position:relative;
+}
+
+iframe{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+border:none;
+}
+
+.hidden{
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="brand">
+<img src="amco-logo.png">
+<div class="title" id="pageTitle">Oldbury Load Plan</div>
+</div>
+
+<div class="controls">
+<button onclick="printCurrent()">Print</button>
+</div>
+
+</div>
+
+<div class="tabs">
+
+<button class="tab active" id="tabLoad" onclick="showLoad()">LOAD PLAN</button>
+<button class="tab" id="tabCheck" onclick="showCheck()">CHECK SHEET</button>
+
+</div>
+
+<div class="viewer">
+
+<!-- LOAD PLAN -->
+
+<iframe id="loadFrame"
+src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&Item=LOAD%20SHEETS">
+</iframe>
+
+<!-- CHECK SHEET -->
+
+<iframe id="checkFrame" class="hidden"
+src="https://1drv.ms/x/c/fb0193fc1e0928af/IQTwnDTpnEQoQKlmfGJyyvBXAXYNa7PD-0ro-GYGW8ipE9A?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&Item=CHECK%20SHEET">
+</iframe>
+
+</div>
+
+<script>
+
+let current="load";
+
+function showLoad(){
+
+document.getElementById("loadFrame").classList.remove("hidden");
+document.getElementById("checkFrame").classList.add("hidden");
+
+document.getElementById("tabLoad").classList.add("active");
+document.getElementById("tabCheck").classList.remove("active");
+
+document.getElementById("pageTitle").innerText="Oldbury Load Plan";
+
+current="load";
+
+}
+
+function showCheck(){
+
+document.getElementById("checkFrame").classList.remove("hidden");
+document.getElementById("loadFrame").classList.add("hidden");
+
+document.getElementById("tabCheck").classList.add("active");
+document.getElementById("tabLoad").classList.remove("active");
+
+document.getElementById("pageTitle").innerText="Oldbury Check Sheet";
+
+current="check";
+
+}
+
+function printCurrent(){
+
+if(current==="load"){
+window.open(document.getElementById("loadFrame").src,"_blank");
+}
+
+if(current==="check"){
+window.open(document.getElementById("checkFrame").src,"_blank");
+}
+
+}
+
+</script>
+
+</body>
+</html>
