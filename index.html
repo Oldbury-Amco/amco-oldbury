@@ -208,6 +208,16 @@
 
   // Printing: open the VIEW link in a new tab (reliable printing)
   function openForPrinting(){
+
+if(current==='load'){
+window.open('print-load.html','_blank');
+}
+
+else{
+window.open('print-check.html','_blank');
+}
+
+}
     const url = (current === 'load') ? PRINT_LOAD : PRINT_CHECK;
     window.open(url, '_blank');
   }
