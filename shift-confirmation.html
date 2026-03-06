@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shift Confirmation</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #16202a;
+      --muted: #607080;
+      --border: #d9e2ec;
+      --accent: #0f62fe;
+      --accent-dark: #0043ce;
+      --success: #198754;
+      --danger: #d92d20;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.8rem;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin: 0;
+    }
+
+    .toolbar,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      padding: 14px;
+      margin-bottom: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .toolbar-row {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 44px;
+      font-size: 16px;
+      border-radius: 12px;
+    }
+
+    input,
+    select {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    button {
+      border: 0;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover { background: var(--accent-dark); }
+
+    .btn-secondary {
+      background: #eef4ff;
+      color: var(--accent-dark);
+    }
+
+    .btn-danger {
+      background: #fff1f1;
+      color: var(--danger);
+    }
+
+    .summary {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .summary-box .label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .summary-box .value {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .name {
+      font-size: 1.15rem;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: var(--accent-dark);
+      white-space: nowrap;
+    }
+
+    .status.complete {
+      background: #ecfdf3;
+      color: var(--success);
+    }
+
+    .grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 12px;
+    }
+
+    .hours {
+      background: #f8fafc;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    @media (min-width: 700px) {
+      .toolbar-row {
+        grid-template-columns: 1.4fr 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .summary,
+      .grid,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .card-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Shift Confirmation</h1>
+      <p class="sub">Mobile-friendly shift page for confirming start time, end time, and total hours.</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-row">
+        <div>
+          <label for="newName">Add name</label>
+          <input id="newName" type="text" placeholder="Enter employee name" />
+        </div>
+        <div>
+          <label for="shiftDate">Shift date</label>
+          <input id="shiftDate" type="date" />
+        </div>
+        <div style="display:flex;align-items:end;">
+          <button class="btn-primary" id="addBtn">Add person</button>
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="summary-box">
+          <div class="label">Total people</div>
+          <div class="value" id="totalPeople">0</div>
+        </div>
+        <div class="summary-box">
+          <div class="label">Total confirmed hours</div>
+          <div class="value" id="totalHours">0.00</div>
+        </div>
+      </div>
+
+      <div class="toolbar-row">
+        <div>
+          <label for="search">Search name</label>
+          <input id="search" type="text" placeholder="Type to filter names" />
+        </div>
+        <div style="display:flex;align-items:end;">
+          <button class="btn-secondary" id="seedBtn">Load sample names</button>
+        </div>
+        <div style="display:flex;align-items:end;">
+          <button class="btn-danger" id="clearBtn">Clear all</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="list" id="shiftList"></div>
+
+    <div class="footer-note">
+      Data is saved on the device using local storage.
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'shiftConfirmationData_v1';
+
+    const shiftList = document.getElementById('shiftList');
+    const totalPeople = document.getElementById('totalPeople');
+    const totalHours = document.getElementById('totalHours');
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const seedBtn = document.getElementById('seedBtn');
+    const searchInput = document.getElementById('search');
+    const newNameInput = document.getElementById('newName');
+    const shiftDateInput = document.getElementById('shiftDate');
+
+    const today = new Date().toISOString().split('T')[0];
+    shiftDateInput.value = today;
+
+    let shifts = loadData();
+
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts));
+    }
+
+    function calcHours(start, end) {
+      if (!start || !end) return 0;
+
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+
+      let startMinutes = sh * 60 + sm;
+      let endMinutes = eh * 60 + em;
+
+      if (endMinutes < startMinutes) {
+        endMinutes += 24 * 60;
+      }
+
+      return (endMinutes - startMinutes) / 60;
+    }
+
+    function formatHours(hours) {
+      return Number(hours || 0).toFixed(2);
+    }
+
+    function updateSummary(filtered = shifts) {
+      totalPeople.textContent = filtered.length;
+      const total = filtered.reduce((sum, item) => sum + calcHours(item.startTime, item.endTime), 0);
+      totalHours.textContent = formatHours(total);
+    }
+
+    function addShift(name, date) {
+      shifts.unshift({
+        id: crypto.randomUUID(),
+        name: name.trim(),
+        shiftDate: date || today,
+        startTime: '',
+        endTime: '',
+        confirmed: false
+      });
+      saveData();
+      render();
+    }
+
+    function removeShift(id) {
+      shifts = shifts.filter(item => item.id !== id);
+      saveData();
+      render();
+    }
+
+    function updateShift(id, field, value) {
+      shifts = shifts.map(item => {
+        if (item.id !== id) return item;
+        const updated = { ...item, [field]: value };
+        updated.confirmed = !!(updated.startTime && updated.endTime);
+        return updated;
+      });
+      saveData();
+      render(false);
+    }
+
+    function getFilteredShifts() {
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) return shifts;
+      return shifts.filter(item => item.name.toLowerCase().includes(q));
+    }
+
+    function render(resetScroll = true) {
+      const filtered = getFilteredShifts();
+      shiftList.innerHTML = '';
+
+      if (!filtered.length) {
+        shiftList.innerHTML = `
+          <div class="card">
+            <div class="name">No names found</div>
+            <p class="sub">Add a person above or change the search.</p>
+          </div>
+        `;
+        updateSummary(filtered);
+        return;
+      }
+
+      filtered.forEach(item => {
+        const hours = calcHours(item.startTime, item.endTime);
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-top">
+            <div>
+              <div class="name">${escapeHtml(item.name)}</div>
+              <div class="sub">Shift date: ${escapeHtml(item.shiftDate || '')}</div>
+            </div>
+            <div class="status ${item.confirmed ? 'complete' : ''}">
+              ${item.confirmed ? 'Confirmed' : 'Awaiting times'}
+            </div>
+          </div>
+
+          <div class="grid">
+            <div>
+              <label>Start time</label>
+              <input type="time" value="${item.startTime || ''}" data-id="${item.id}" data-field="startTime" />
+            </div>
+            <div>
+              <label>End time</label>
+              <input type="time" value="${item.endTime || ''}" data-id="${item.id}" data-field="endTime" />
+            </div>
+          </div>
+
+          <div class="hours">Hours worked: ${formatHours(hours)}</div>
+
+          <div class="actions">
+            <button class="btn-secondary" data-copy="${item.id}">Use same date</button>
+            <button class="btn-danger" data-delete="${item.id}">Remove</button>
+          </div>
+        `;
+        shiftList.appendChild(card);
+      });
+
+      shiftList.querySelectorAll('input[type="time"]').forEach(input => {
+        input.addEventListener('change', e => {
+          updateShift(e.target.dataset.id, e.target.dataset.field, e.target.value);
+        });
+      });
+
+      shiftList.querySelectorAll('[data-delete]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          removeShift(e.target.dataset.delete);
+        });
+      });
+
+      shiftList.querySelectorAll('[data-copy]').forEach(btn => {
+        btn.addEventListener('click', e => {
+          const id = e.target.dataset.copy;
+          const currentDate = shiftDateInput.value || today;
+          updateShift(id, 'shiftDate', currentDate);
+        });
+      });
+
+      updateSummary(filtered);
+
+      if (resetScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    addBtn.addEventListener('click', () => {
+      const name = newNameInput.value.trim();
+      const date = shiftDateInput.value || today;
+      if (!name) {
+        alert('Please enter a name.');
+        return;
+      }
+      addShift(name, date);
+      newNameInput.value = '';
+      newNameInput.focus();
+    });
+
+    newNameInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') addBtn.click();
+    });
+
+    searchInput.addEventListener('input', () => render(false));
+
+    clearBtn.addEventListener('click', () => {
+      const ok = confirm('Clear all names and times from this device?');
+      if (!ok) return;
+      shifts = [];
+      saveData();
+      render(false);
+    });
+
+    seedBtn.addEventListener('click', () => {
+      if (shifts.length) {
+        const ok = confirm('This will add sample names to the current list. Continue?');
+        if (!ok) return;
+      }
+      const samples = ['Sam Hall', 'Adele Hall', 'Amelia Hall', 'Ivy Hall', 'Jordan Smith'];
+      samples.forEach(name => {
+        shifts.push({
+          id: crypto.randomUUID(),
+          name,
+          shiftDate: shiftDateInput.value || today,
+          startTime: '',
+          endTime: '',
+          confirmed: false
+        });
+      });
+      saveData();
+      render(false);
+    });
+
+    render(false);
+  </script>
+</body>
+</html>
