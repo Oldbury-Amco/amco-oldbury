@@ -15,6 +15,7 @@
       --accent-dark: #0043ce;
       --success: #198754;
       --danger: #d92d20;
+      --warning: #b54708;
       --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
       --radius: 18px;
     }
@@ -30,7 +31,7 @@
     }
 
     .wrap {
-      max-width: 760px;
+      max-width: 980px;
       margin: 0 auto;
       padding: 18px;
     }
@@ -39,10 +40,12 @@
       margin-bottom: 18px;
     }
 
-    h1 {
+    h1, h2 {
       margin: 0 0 6px;
-      font-size: 1.8rem;
     }
+
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.2rem; }
 
     .sub {
       color: var(--muted);
@@ -51,25 +54,35 @@
     }
 
     .toolbar,
-    .card {
+    .card,
+    .panel {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    .toolbar {
-      padding: 14px;
+    .toolbar,
+    .panel,
+    .card {
+      padding: 16px;
       margin-bottom: 16px;
-      display: grid;
-      gap: 12px;
     }
 
-    .toolbar-row {
+    .toolbar-row,
+    .grid,
+    .summary,
+    .actions,
+    .summary-controls {
       display: grid;
       gap: 10px;
-      grid-template-columns: 1fr;
     }
+
+    .toolbar-row { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    .summary { grid-template-columns: repeat(4, 1fr); }
+    .actions { grid-template-columns: 1fr 1fr; }
+    .summary-controls { grid-template-columns: 1fr 1fr 1fr auto; align-items: end; }
 
     label {
       display: block;
@@ -102,28 +115,11 @@
       font-weight: bold;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
-
+    .btn-primary { background: var(--accent); color: white; }
     .btn-primary:hover { background: var(--accent-dark); }
-
-    .btn-secondary {
-      background: #eef4ff;
-      color: var(--accent-dark);
-    }
-
-    .btn-danger {
-      background: #fff1f1;
-      color: var(--danger);
-    }
-
-    .summary {
-      display: grid;
-      gap: 12px;
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .btn-secondary { background: #eef4ff; color: var(--accent-dark); }
+    .btn-danger { background: #fff1f1; color: var(--danger); }
+    .btn-success { background: #ecfdf3; color: var(--success); }
 
     .summary-box {
       background: #f8fafc;
@@ -143,14 +139,7 @@
       font-weight: bold;
     }
 
-    .list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .card {
-      padding: 16px;
-    }
+    .list { display: grid; gap: 14px; }
 
     .card-top {
       display: flex;
@@ -160,30 +149,20 @@
       margin-bottom: 12px;
     }
 
-    .name {
-      font-size: 1.15rem;
-      font-weight: bold;
-    }
+    .name { font-size: 1.15rem; font-weight: bold; }
 
     .status {
       font-size: 0.85rem;
       padding: 6px 10px;
       border-radius: 999px;
-      background: #eef4ff;
-      color: var(--accent-dark);
+      background: #fff7ed;
+      color: var(--warning);
       white-space: nowrap;
     }
 
     .status.complete {
       background: #ecfdf3;
       color: var(--success);
-    }
-
-    .grid {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 1fr 1fr;
-      margin-bottom: 12px;
     }
 
     .hours {
@@ -195,11 +174,33 @@
       font-weight: bold;
     }
 
-    .actions {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: 1fr 1fr;
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 520px;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: bold;
+    }
+
+    tr:last-child td { border-bottom: 0; }
 
     .footer-note {
       color: var(--muted);
@@ -209,22 +210,21 @@
     }
 
     @media (min-width: 700px) {
-      .toolbar-row {
-        grid-template-columns: 1.4fr 1fr 1fr;
-      }
+      .toolbar-row.top { grid-template-columns: 1.2fr 0.9fr auto; }
+      .toolbar-row.bottom { grid-template-columns: 1fr auto auto; }
+    }
+
+    @media (max-width: 820px) {
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .summary-controls { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 520px) {
       .summary,
       .grid,
-      .actions {
-        grid-template-columns: 1fr;
-      }
-
-      .card-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .actions,
+      .summary-controls { grid-template-columns: 1fr; }
+      .card-top { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -232,42 +232,50 @@
   <div class="wrap">
     <div class="header">
       <h1>Shift Confirmation</h1>
-      <p class="sub">Mobile-friendly shift page for confirming start time, end time, and total hours.</p>
+      <p class="sub">Phone-friendly shift entry with defined employee names, reliable time dropdowns, and weekly or monthly export summaries.</p>
     </div>
 
     <div class="toolbar">
-      <div class="toolbar-row">
+      <div class="toolbar-row top">
         <div>
-          <label for="newName">Add name</label>
-          <input id="newName" type="text" placeholder="Enter employee name" />
+          <label for="employeeSelect">Employee</label>
+          <select id="employeeSelect"></select>
         </div>
         <div>
           <label for="shiftDate">Shift date</label>
           <input id="shiftDate" type="date" />
         </div>
         <div style="display:flex;align-items:end;">
-          <button class="btn-primary" id="addBtn">Add person</button>
+          <button class="btn-primary" id="addBtn">Add shift</button>
         </div>
       </div>
 
       <div class="summary">
         <div class="summary-box">
-          <div class="label">Total people</div>
+          <div class="label">Visible entries</div>
           <div class="value" id="totalPeople">0</div>
         </div>
         <div class="summary-box">
-          <div class="label">Total confirmed hours</div>
+          <div class="label">Visible hours</div>
           <div class="value" id="totalHours">0.00</div>
+        </div>
+        <div class="summary-box">
+          <div class="label">All saved shifts</div>
+          <div class="value" id="totalShifts">0</div>
+        </div>
+        <div class="summary-box">
+          <div class="label">All saved hours</div>
+          <div class="value" id="allHours">0.00</div>
         </div>
       </div>
 
-      <div class="toolbar-row">
+      <div class="toolbar-row bottom">
         <div>
-          <label for="search">Search name</label>
+          <label for="search">Search employee</label>
           <input id="search" type="text" placeholder="Type to filter names" />
         </div>
         <div style="display:flex;align-items:end;">
-          <button class="btn-secondary" id="seedBtn">Load sample names</button>
+          <button class="btn-secondary" id="todayBtn">Today only</button>
         </div>
         <div style="display:flex;align-items:end;">
           <button class="btn-danger" id="clearBtn">Clear all</button>
@@ -275,30 +283,110 @@
       </div>
     </div>
 
-    <div class="list" id="shiftList"></div>
-
-    <div class="footer-note">
-      Data is saved on the device using local storage.
+    <div class="panel">
+      <h2>Shift entries</h2>
+      <p class="sub" style="margin-bottom:12px;">Choose the employee from the fixed list, then use the dropdown time selectors for start, finish, and optional unpaid break.</p>
+      <div class="list" id="shiftList"></div>
     </div>
+
+    <div class="panel">
+      <h2>Hours summary and export</h2>
+      <p class="sub" style="margin-bottom:12px;">Create a summary by week or month showing each employee and total hours worked.</p>
+
+      <div class="summary-controls">
+        <div>
+          <label for="summaryType">Period type</label>
+          <select id="summaryType">
+            <option value="week">Week</option>
+            <option value="month">Month</option>
+          </select>
+        </div>
+        <div>
+          <label for="periodPicker">Select date in period</label>
+          <input id="periodPicker" type="date" />
+        </div>
+        <div>
+          <label for="employeeFilter">Employee filter</label>
+          <select id="employeeFilter"></select>
+        </div>
+        <div style="display:flex;align-items:end;">
+          <button class="btn-success" id="exportBtn">Export CSV</button>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-top:14px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Period</th>
+              <th>Shifts</th>
+              <th>Total hours</th>
+            </tr>
+          </thead>
+          <tbody id="summaryBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer-note">Data is stored in the browser on that device. Export the CSV when you want a sharable weekly or monthly record.</div>
   </div>
 
   <script>
-    const STORAGE_KEY = 'shiftConfirmationData_v1';
+    const STORAGE_KEY = 'shiftConfirmationData_v2';
+    const EMPLOYEES = [
+      'Sam Hall',
+      'Adele Hall',
+      'Jordan Smith',
+      'Chris Taylor',
+      'Lewis Brown',
+      'Nathan Jones',
+      'Ben Carter',
+      'Luke Evans'
+    ];
+
+    const TIME_OPTIONS = buildTimeOptions(15);
 
     const shiftList = document.getElementById('shiftList');
     const totalPeople = document.getElementById('totalPeople');
     const totalHours = document.getElementById('totalHours');
+    const totalShifts = document.getElementById('totalShifts');
+    const allHours = document.getElementById('allHours');
     const addBtn = document.getElementById('addBtn');
     const clearBtn = document.getElementById('clearBtn');
-    const seedBtn = document.getElementById('seedBtn');
+    const todayBtn = document.getElementById('todayBtn');
     const searchInput = document.getElementById('search');
-    const newNameInput = document.getElementById('newName');
     const shiftDateInput = document.getElementById('shiftDate');
+    const employeeSelect = document.getElementById('employeeSelect');
+    const summaryType = document.getElementById('summaryType');
+    const periodPicker = document.getElementById('periodPicker');
+    const employeeFilter = document.getElementById('employeeFilter');
+    const exportBtn = document.getElementById('exportBtn');
+    const summaryBody = document.getElementById('summaryBody');
 
     const today = new Date().toISOString().split('T')[0];
     shiftDateInput.value = today;
+    periodPicker.value = today;
+
+    populateEmployeeDropdowns();
 
     let shifts = loadData();
+    let todayOnly = false;
+
+    function buildTimeOptions(intervalMinutes) {
+      const options = [''];
+      for (let mins = 0; mins < 24 * 60; mins += intervalMinutes) {
+        const h = String(Math.floor(mins / 60)).padStart(2, '0');
+        const m = String(mins % 60).padStart(2, '0');
+        options.push(`${h}:${m}`);
+      }
+      return options;
+    }
+
+    function populateEmployeeDropdowns() {
+      employeeSelect.innerHTML = EMPLOYEES.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      employeeFilter.innerHTML = `<option value="all">All employees</option>` + EMPLOYEES.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+    }
 
     function loadData() {
       try {
@@ -313,39 +401,46 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(shifts));
     }
 
-    function calcHours(start, end) {
+    function calcHours(start, end, breakMins = 0) {
       if (!start || !end) return 0;
-
       const [sh, sm] = start.split(':').map(Number);
       const [eh, em] = end.split(':').map(Number);
-
       let startMinutes = sh * 60 + sm;
       let endMinutes = eh * 60 + em;
-
-      if (endMinutes < startMinutes) {
-        endMinutes += 24 * 60;
-      }
-
-      return (endMinutes - startMinutes) / 60;
+      if (endMinutes < startMinutes) endMinutes += 24 * 60;
+      const worked = Math.max(0, endMinutes - startMinutes - Number(breakMins || 0));
+      return worked / 60;
     }
 
     function formatHours(hours) {
       return Number(hours || 0).toFixed(2);
     }
 
-    function updateSummary(filtered = shifts) {
-      totalPeople.textContent = filtered.length;
-      const total = filtered.reduce((sum, item) => sum + calcHours(item.startTime, item.endTime), 0);
-      totalHours.textContent = formatHours(total);
+    function createSelect(field, selectedValue, id) {
+      const options = TIME_OPTIONS.map(value => {
+        const label = value || 'Select';
+        const selected = value === selectedValue ? 'selected' : '';
+        return `<option value="${value}" ${selected}>${label}</option>`;
+      }).join('');
+      return `<select data-id="${id}" data-field="${field}">${options}</select>`;
+    }
+
+    function createBreakSelect(selectedValue, id) {
+      const breakOptions = [0, 15, 30, 45, 60].map(v => {
+        const selected = Number(selectedValue || 0) === v ? 'selected' : '';
+        return `<option value="${v}" ${selected}>${v} mins</option>`;
+      }).join('');
+      return `<select data-id="${id}" data-field="breakMins">${breakOptions}</select>`;
     }
 
     function addShift(name, date) {
       shifts.unshift({
         id: crypto.randomUUID(),
-        name: name.trim(),
+        name,
         shiftDate: date || today,
         startTime: '',
         endTime: '',
+        breakMins: 0,
         confirmed: false
       });
       saveData();
@@ -361,7 +456,7 @@
     function updateShift(id, field, value) {
       shifts = shifts.map(item => {
         if (item.id !== id) return item;
-        const updated = { ...item, [field]: value };
+        const updated = { ...item, [field]: field === 'breakMins' ? Number(value) : value };
         updated.confirmed = !!(updated.startTime && updated.endTime);
         return updated;
       });
@@ -371,8 +466,18 @@
 
     function getFilteredShifts() {
       const q = searchInput.value.trim().toLowerCase();
-      if (!q) return shifts;
-      return shifts.filter(item => item.name.toLowerCase().includes(q));
+      return shifts.filter(item => {
+        const matchesSearch = !q || item.name.toLowerCase().includes(q);
+        const matchesToday = !todayOnly || item.shiftDate === today;
+        return matchesSearch && matchesToday;
+      });
+    }
+
+    function updateSummary(filtered = shifts) {
+      totalPeople.textContent = filtered.length;
+      totalHours.textContent = formatHours(filtered.reduce((sum, item) => sum + calcHours(item.startTime, item.endTime, item.breakMins), 0));
+      totalShifts.textContent = shifts.length;
+      allHours.textContent = formatHours(shifts.reduce((sum, item) => sum + calcHours(item.startTime, item.endTime, item.breakMins), 0));
     }
 
     function render(resetScroll = true) {
@@ -380,75 +485,171 @@
       shiftList.innerHTML = '';
 
       if (!filtered.length) {
-        shiftList.innerHTML = `
-          <div class="card">
-            <div class="name">No names found</div>
-            <p class="sub">Add a person above or change the search.</p>
-          </div>
-        `;
-        updateSummary(filtered);
-        return;
+        shiftList.innerHTML = `<div class="card"><div class="name">No shifts found</div><p class="sub">Add a shift above or change the filter.</p></div>`;
+      } else {
+        filtered.forEach(item => {
+          const hours = calcHours(item.startTime, item.endTime, item.breakMins);
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <div class="card-top">
+              <div>
+                <div class="name">${escapeHtml(item.name)}</div>
+                <div class="sub">Shift date: ${escapeHtml(item.shiftDate || '')}</div>
+              </div>
+              <div class="status ${item.confirmed ? 'complete' : ''}">${item.confirmed ? 'Confirmed' : 'Awaiting times'}</div>
+            </div>
+            <div class="grid">
+              <div>
+                <label>Start time</label>
+                ${createSelect('startTime', item.startTime || '', item.id)}
+              </div>
+              <div>
+                <label>End time</label>
+                ${createSelect('endTime', item.endTime || '', item.id)}
+              </div>
+              <div>
+                <label>Unpaid break</label>
+                ${createBreakSelect(item.breakMins || 0, item.id)}
+              </div>
+              <div>
+                <label>Shift date</label>
+                <input type="date" value="${item.shiftDate || today}" data-id="${item.id}" data-field="shiftDate" />
+              </div>
+            </div>
+            <div class="hours">Hours worked: ${formatHours(hours)}</div>
+            <div class="actions">
+              <button class="btn-secondary" data-clone="${item.id}">Duplicate shift</button>
+              <button class="btn-danger" data-delete="${item.id}">Remove</button>
+            </div>
+          `;
+          shiftList.appendChild(card);
+        });
       }
 
-      filtered.forEach(item => {
-        const hours = calcHours(item.startTime, item.endTime);
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-top">
-            <div>
-              <div class="name">${escapeHtml(item.name)}</div>
-              <div class="sub">Shift date: ${escapeHtml(item.shiftDate || '')}</div>
-            </div>
-            <div class="status ${item.confirmed ? 'complete' : ''}">
-              ${item.confirmed ? 'Confirmed' : 'Awaiting times'}
-            </div>
-          </div>
-
-          <div class="grid">
-            <div>
-              <label>Start time</label>
-              <input type="time" value="${item.startTime || ''}" data-id="${item.id}" data-field="startTime" />
-            </div>
-            <div>
-              <label>End time</label>
-              <input type="time" value="${item.endTime || ''}" data-id="${item.id}" data-field="endTime" />
-            </div>
-          </div>
-
-          <div class="hours">Hours worked: ${formatHours(hours)}</div>
-
-          <div class="actions">
-            <button class="btn-secondary" data-copy="${item.id}">Use same date</button>
-            <button class="btn-danger" data-delete="${item.id}">Remove</button>
-          </div>
-        `;
-        shiftList.appendChild(card);
-      });
-
-      shiftList.querySelectorAll('input[type="time"]').forEach(input => {
-        input.addEventListener('change', e => {
+      shiftList.querySelectorAll('select[data-id], input[data-id]').forEach(control => {
+        control.addEventListener('change', e => {
           updateShift(e.target.dataset.id, e.target.dataset.field, e.target.value);
         });
       });
 
       shiftList.querySelectorAll('[data-delete]').forEach(btn => {
-        btn.addEventListener('click', e => {
-          removeShift(e.target.dataset.delete);
-        });
+        btn.addEventListener('click', e => removeShift(e.target.dataset.delete));
       });
 
-      shiftList.querySelectorAll('[data-copy]').forEach(btn => {
+      shiftList.querySelectorAll('[data-clone]').forEach(btn => {
         btn.addEventListener('click', e => {
-          const id = e.target.dataset.copy;
-          const currentDate = shiftDateInput.value || today;
-          updateShift(id, 'shiftDate', currentDate);
+          const source = shifts.find(x => x.id === e.target.dataset.clone);
+          if (!source) return;
+          shifts.unshift({ ...source, id: crypto.randomUUID(), shiftDate: today });
+          saveData();
+          render(false);
         });
       });
 
       updateSummary(filtered);
-
+      renderSummaryTable();
       if (resetScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function getWeekStart(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      const day = (date.getDay() + 6) % 7;
+      date.setDate(date.getDate() - day);
+      return date;
+    }
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getPeriodLabel(type, dateStr) {
+      if (type === 'month') {
+        return dateStr.slice(0, 7);
+      }
+      const start = getWeekStart(dateStr);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 6);
+      return `${formatDate(start)} to ${formatDate(end)}`;
+    }
+
+    function isInSelectedPeriod(item) {
+      const chosenDate = periodPicker.value || today;
+      const type = summaryType.value;
+      if (type === 'month') {
+        return item.shiftDate && item.shiftDate.slice(0, 7) === chosenDate.slice(0, 7);
+      }
+      const itemWeek = getWeekStart(item.shiftDate);
+      const chosenWeek = getWeekStart(chosenDate);
+      return formatDate(itemWeek) === formatDate(chosenWeek);
+    }
+
+    function buildSummaryRows() {
+      const employeeValue = employeeFilter.value;
+      const rows = {};
+      shifts.filter(item => item.confirmed).filter(isInSelectedPeriod).filter(item => employeeValue === 'all' || item.name === employeeValue).forEach(item => {
+        if (!rows[item.name]) {
+          rows[item.name] = {
+            name: item.name,
+            period: getPeriodLabel(summaryType.value, periodPicker.value || today),
+            shifts: 0,
+            hours: 0
+          };
+        }
+        rows[item.name].shifts += 1;
+        rows[item.name].hours += calcHours(item.startTime, item.endTime, item.breakMins);
+      });
+      return Object.values(rows).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    function renderSummaryTable() {
+      const rows = buildSummaryRows();
+      if (!rows.length) {
+        summaryBody.innerHTML = `<tr><td colspan="4">No confirmed shifts found for this selection.</td></tr>`;
+        return;
+      }
+      summaryBody.innerHTML = rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(row.period)}</td>
+          <td>${row.shifts}</td>
+          <td>${formatHours(row.hours)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function exportSummaryCsv() {
+      const rows = buildSummaryRows();
+      if (!rows.length) {
+        alert('There is no summary data to export for the selected period.');
+        return;
+      }
+      const header = ['Employee', 'Period', 'Shifts', 'Total Hours'];
+      const csvRows = [header.join(',')].concat(rows.map(row => [
+        csvSafe(row.name),
+        csvSafe(row.period),
+        row.shifts,
+        formatHours(row.hours)
+      ].join(',')));
+      const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const fileType = summaryType.value;
+      const selected = periodPicker.value || today;
+      a.href = url;
+      a.download = `shift-summary-${fileType}-${selected}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function csvSafe(value) {
+      const str = String(value ?? '');
+      return '"' + str.replace(/"/g, '""') + '"';
     }
 
     function escapeHtml(str) {
@@ -461,50 +662,29 @@
     }
 
     addBtn.addEventListener('click', () => {
-      const name = newNameInput.value.trim();
-      const date = shiftDateInput.value || today;
-      if (!name) {
-        alert('Please enter a name.');
-        return;
-      }
-      addShift(name, date);
-      newNameInput.value = '';
-      newNameInput.focus();
-    });
-
-    newNameInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') addBtn.click();
+      addShift(employeeSelect.value, shiftDateInput.value || today);
     });
 
     searchInput.addEventListener('input', () => render(false));
 
+    todayBtn.addEventListener('click', () => {
+      todayOnly = !todayOnly;
+      todayBtn.textContent = todayOnly ? 'Showing today only' : 'Today only';
+      render(false);
+    });
+
     clearBtn.addEventListener('click', () => {
-      const ok = confirm('Clear all names and times from this device?');
+      const ok = confirm('Clear all saved shifts from this device?');
       if (!ok) return;
       shifts = [];
       saveData();
       render(false);
     });
 
-    seedBtn.addEventListener('click', () => {
-      if (shifts.length) {
-        const ok = confirm('This will add sample names to the current list. Continue?');
-        if (!ok) return;
-      }
-      const samples = ['Sam Hall', 'Adele Hall', 'Amelia Hall', 'Ivy Hall', 'Jordan Smith'];
-      samples.forEach(name => {
-        shifts.push({
-          id: crypto.randomUUID(),
-          name,
-          shiftDate: shiftDateInput.value || today,
-          startTime: '',
-          endTime: '',
-          confirmed: false
-        });
-      });
-      saveData();
-      render(false);
-    });
+    summaryType.addEventListener('change', () => renderSummaryTable());
+    periodPicker.addEventListener('change', () => renderSummaryTable());
+    employeeFilter.addEventListener('change', () => renderSummaryTable());
+    exportBtn.addEventListener('click', exportSummaryCsv);
 
     render(false);
   </script>
